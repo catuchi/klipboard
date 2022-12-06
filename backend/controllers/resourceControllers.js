@@ -4,9 +4,9 @@ const db = require("../db/index");
 // @route   GET /api/resources
 // @access  Public
 const getResources = async (req, res) => {
-  const { rows } = await db.query("SELECT * FROM resources");
-  console.log(rows);
-  res.status(200).json({ message: "Get resources" });
+  const { rows } = await db.query("SELECT * FROM resources ORDER BY id ASC");
+
+  res.status(200).json(rows);
 };
 
 // @desc    Get resource
@@ -17,7 +17,12 @@ const getResource = async (req, res) => {
   const { rows } = await db.query("SELECT * FROM resources WHERE id = $1", [
     id,
   ]);
-  // console.log(rows);
+
+  if (rows.length === 0) {
+    res.status(400);
+    throw new Error("Resource not found");
+  }
+
   res.status(200).json(rows[0]);
 };
 
@@ -56,7 +61,16 @@ const createResource = async (req, res) => {
 // @access  Public
 const updateResource = async (req, res) => {
   const { id } = req.params;
-  const { title, description, image, category_id, user_id } = req.body;
+
+  const resource = await db.query("SELECT * FROM resources WHERE id = $1", [
+    id,
+  ]);
+
+  if (resource.rows.length === 0) {
+    res.status(400);
+    throw new Error("Resource not found");
+  }
+
   const queryString = `
     UPDATE resources
     SET description = $1
@@ -77,8 +91,29 @@ const updateResource = async (req, res) => {
 // @desc    Delete resource
 // @route   DELETE /api/resources
 // @access  Public
-const deleteResource = (req, res) => {
-  res.status(200).json({ message: `Delete resource ${req.params.id}` });
+const deleteResource = async (req, res) => {
+  const { id } = req.params;
+
+  const resource = await db.query("SELECT * FROM resources WHERE id = $1", [
+    id,
+  ]);
+
+  if (resource.rows.length === 0) {
+    res.status(400);
+    throw new Error("Resource not found");
+  }
+
+  const queryString = `
+    DELETE FROM resources
+    WHERE id = $1
+    RETURNING id
+  `;
+
+  const values = [id];
+
+  const { rows } = await db.query(queryString, values);
+
+  res.status(200).json(rows[0]);
 };
 
 module.exports = {

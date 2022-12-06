@@ -9,6 +9,11 @@ const getResources = (req, res) => {
 // @route   POST /api/resources
 // @access  Public
 const createResource = (req, res) => {
+  if (!req.body.text) {
+    res.status(400);
+    throw new Error("Please add a text field");
+  }
+
   res.status(200).json({ message: "Create resource" });
 };
 

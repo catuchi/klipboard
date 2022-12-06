@@ -8,7 +8,8 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (name, email, password)
-VALUES('David', 'david@gmail.com', 'test123');
+VALUES('David', 'david@gmail.com', 'test123'),
+      ('Stephen', 'stephen@gmail.com', 'test123');
 
 CREATE TABLE categories (
   id SERIAL PRIMARY KEY NOT NULL,
@@ -17,7 +18,8 @@ CREATE TABLE categories (
 
 INSERT INTO categories (name)
 VALUES('tutorial'),
-      ('how to');
+      ('how to'),
+      ('guide');
 
 CREATE TABLE resources (
   id SERIAL PRIMARY KEY NOT NULL,
@@ -28,6 +30,10 @@ CREATE TABLE resources (
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL
 );
+
+ALTER TABLE resources
+ALTER COLUMN created_at
+SET DEFAULT CURRENT_TIMESTAMP;
 
 INSERT INTO resources (title, description, image, category_id, user_id, created_at)
 VALUES('connect database in django', ' This tutorial will explain how to connect MySQL Database with your Django Project', 'https://studygyaan.com/wp-content/uploads/2019/11/Django-MySQL-Connection.png', 1, 1, CURRENT_TIMESTAMP),

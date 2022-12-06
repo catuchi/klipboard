@@ -21,6 +21,8 @@ VALUES('tutorial'),
       ('how to'),
       ('guide');
 
+-- blog, ebook, video, webinar, social media content,
+
 CREATE TABLE resources (
   id SERIAL PRIMARY KEY NOT NULL,
   title VARCHAR(255) NOT NULL,

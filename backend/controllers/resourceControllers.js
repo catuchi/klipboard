@@ -1,7 +1,11 @@
+const db = require("../db/index");
+
 // @desc    Get resource
 // @route   GET /api/resources
 // @access  Public
-const getResources = (req, res) => {
+const getResources = async (req, res) => {
+  const { rows } = await db.query("SELECT * FROM resources");
+  console.log(rows);
   res.status(200).json({ message: "Get resources" });
 };
 

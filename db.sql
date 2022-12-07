@@ -7,6 +7,10 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL
 );
 
+DELETE FROM users
+WHERE id = 3
+RETURNING *;
+
 INSERT INTO users (name, email, password)
 VALUES('David', 'david@gmail.com', 'test123'),
       ('Stephen', 'stephen@gmail.com', 'test123');

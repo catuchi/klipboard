@@ -1,4 +1,5 @@
 -- CREATE DATABASE klipboard
+-- remove db.sql from git
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY NOT NULL,

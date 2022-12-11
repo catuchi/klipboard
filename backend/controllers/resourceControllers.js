@@ -1,6 +1,6 @@
 const db = require("../db/index");
 
-// @desc    Get resource
+// @desc    Get resources
 // @route   GET /api/resources
 // @access  Public
 const getResources = async (req, res) => {
@@ -61,14 +61,31 @@ const createResource = async (req, res) => {
 // @access  Public
 const updateResource = async (req, res) => {
   const { id } = req.params;
+  const { name, email } = req.user;
 
-  const resource = await db.query("SELECT * FROM resources WHERE id = $1", [
-    id,
-  ]);
+  let resource = await db.query("SELECT * FROM resources WHERE id = $1", [id]);
 
-  if (resource.rows.length === 0) {
+  resource = resource.rows;
+
+  if (resource.length === 0) {
     res.status(400);
     throw new Error("Resource not found");
+  }
+
+  let userExists = await db.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+
+  userExists = userExists.rows;
+
+  if (userExists.length === 0) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  if (resource.user_id !== userExists.id) {
+    res.status(401);
+    throw new Error("User not authorized");
   }
 
   const queryString = `
@@ -93,14 +110,31 @@ const updateResource = async (req, res) => {
 // @access  Public
 const deleteResource = async (req, res) => {
   const { id } = req.params;
+  const { name, email } = req.user;
 
-  const resource = await db.query("SELECT * FROM resources WHERE id = $1", [
-    id,
-  ]);
+  let resource = await db.query("SELECT * FROM resources WHERE id = $1", [id]);
 
-  if (resource.rows.length === 0) {
+  resource = resource.rows;
+
+  if (resource.length === 0) {
     res.status(400);
     throw new Error("Resource not found");
+  }
+
+  let userExists = await db.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+
+  userExists = userExists.rows;
+
+  if (userExists.length === 0) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  if (resource.user_id !== userExists.id) {
+    res.status(401);
+    throw new Error("User not authorized");
   }
 
   const queryString = `

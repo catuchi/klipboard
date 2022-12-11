@@ -11,11 +11,13 @@ const {
   getResource,
 } = require("../controllers/resourceControllers");
 
-router.route("/").get(getResources).post(createResource);
+const { protect } = require("../middlewares/authMiddleware");
+
+router.route("/").get(getResources).post(protect, createResource);
 router
   .route("/:id")
-  .put(updateResource)
-  .delete(deleteResource)
+  .put(protect, updateResource)
+  .delete(protect, deleteResource)
   .get(getResource);
 
 module.exports = router;

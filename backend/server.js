@@ -13,6 +13,9 @@ app.use(morgan("dev"));
 
 app.use("/api/resources", require("./routes/resourceRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
+// app.use("/api/categories", require("./routes/categoryRoutes"));
+// app.use("/api/comments", require("./routes/commentRoutes"));
+// app.use("/api/likes", require("./routes/likeRoutes"));
 
 app.use(errorHandler);
 
